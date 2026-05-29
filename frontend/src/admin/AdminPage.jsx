@@ -1,11 +1,12 @@
-import { BarChartOutlined, ShoppingCartOutlined, UserOutlined, AppstoreOutlined, TagsOutlined } from "@ant-design/icons";
+import { AppstoreOutlined, BarChartOutlined, ShoppingCartOutlined, TagsOutlined, UserOutlined } from "@ant-design/icons";
 import { Layout, Menu } from "antd";
 import { useState } from "react";
-import DashboardTab from "./tabs/DashboardTab";
-import ProductsTab from "./tabs/ProductsTab";
-import OrdersTab from "./tabs/OrdersTab";
-import UsersTab from "./tabs/UsersTab";
 import CategoriesTab from "./tabs/CategoriesTab";
+import DashboardTab from "./tabs/DashboardTab";
+import OrdersTab from "./tabs/OrdersTab";
+import ProductsTab from "./tabs/ProductsTab";
+import UsersTab from "./tabs/UsersTab";
+import Scene3D from "../components/Scene3D";
 
 const { Sider, Content } = Layout;
 
@@ -14,7 +15,7 @@ const menuItems = [
   { key: "products", icon: <AppstoreOutlined />, label: "Products" },
   { key: "orders", icon: <ShoppingCartOutlined />, label: "Orders" },
   { key: "users", icon: <UserOutlined />, label: "Users" },
-  { key: "categories", icon: <TagsOutlined />, label: "Categories" },
+  { key: "categories", icon: <TagsOutlined />, label: "Categories" }
 ];
 
 export default function AdminPage() {
@@ -23,43 +24,53 @@ export default function AdminPage() {
 
   const renderTab = () => {
     switch (activeTab) {
-      case "dashboard": return <DashboardTab />;
-      case "products": return <ProductsTab />;
-      case "orders": return <OrdersTab />;
-      case "users": return <UsersTab />;
-      case "categories": return <CategoriesTab />;
-      default: return <DashboardTab />;
+      case "dashboard":
+        return <DashboardTab />;
+      case "products":
+        return <ProductsTab />;
+      case "orders":
+        return <OrdersTab />;
+      case "users":
+        return <UsersTab />;
+      case "categories":
+        return <CategoriesTab />;
+      default:
+        return <DashboardTab />;
     }
   };
 
   return (
-    <div className="pt-16 min-h-screen bg-gray-50">
-      <Layout className="min-h-[calc(100vh-64px)]">
-        <Sider
-          collapsible
-          collapsed={collapsed}
-          onCollapse={setCollapsed}
-          breakpoint="lg"
-          theme="light"
-          className="!bg-white border-r border-gray-200"
-          style={{ position: "sticky", top: 64, height: "calc(100vh - 64px)" }}
-        >
-          <div className="p-4 text-center border-b border-gray-100">
-            <h2 className={`font-semibold text-gray-800 transition-all ${collapsed ? "text-xs" : "text-lg"}`}>
-              {collapsed ? "JT" : "Admin Panel"}
-            </h2>
-          </div>
-          <Menu
-            mode="inline"
-            selectedKeys={[activeTab]}
-            onClick={({ key }) => setActiveTab(key)}
-            items={menuItems}
-            className="border-none mt-2"
-          />
-        </Sider>
-        <Content className="p-6 md:p-8">
-          {renderTab()}
-        </Content>
+    <div className="min-h-screen pt-28 md:pt-32">
+      <Layout className="ven-container !bg-transparent pb-12">
+        <div className="neo-panel relative flex min-h-[calc(100vh-9rem)] w-full overflow-hidden">
+          <Scene3D variant="admin" className="left-0 top-0 h-64 opacity-20" />
+          <Sider
+            collapsible
+            collapsed={collapsed}
+            onCollapse={setCollapsed}
+            breakpoint="lg"
+            theme="light"
+            width={250}
+            className="relative z-10 !bg-[#101314] !text-white"
+          >
+            <div className="border-b border-white/10 p-5">
+              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#00d1c7]">Jasmine OS</p>
+              <h2 className={`mt-2 font-display font-semibold text-white transition-all ${collapsed ? "text-xl" : "text-3xl"}`}>
+                {collapsed ? "JT" : "Admin"}
+              </h2>
+            </div>
+            <Menu
+              mode="inline"
+              selectedKeys={[activeTab]}
+              onClick={({ key }) => setActiveTab(key)}
+              items={menuItems}
+              className="admin-menu !border-none !bg-transparent !pt-3"
+            />
+          </Sider>
+          <Content className="relative z-10 min-w-0 flex-1 p-4 md:p-7 lg:p-8">
+            {renderTab()}
+          </Content>
+        </div>
       </Layout>
     </div>
   );

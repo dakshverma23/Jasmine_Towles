@@ -13,10 +13,10 @@ export const pageContent = {
     blocks: [
       {
         title: "Integrated Manufacturing",
-        body: "Spinning raw cotton into yarn through weaving, wet processing, and finished goods — all under one ecosystem."
+        body: "Spinning raw cotton into yarn through weaving, wet processing, and finished goods - all under one connected ecosystem."
       },
       {
-        title: "Bulk & Custom Orders",
+        title: "Bulk and Custom Orders",
         body: "Infrastructure and workforce designed for high-volume production with customization for global buyers."
       }
     ]
@@ -24,7 +24,7 @@ export const pageContent = {
   facilities: {
     badge: "Facilities",
     title: ["OUR", "FACILITIES"],
-    subtitle: "End-to-end production under one roof — spinning, weaving, wet processing, and manufacturing.",
+    subtitle: "End-to-end production under one roof - spinning, weaving, wet processing, and manufacturing.",
     heroImage: "https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?auto=format&fit=crop&w=1600&q=80",
     blocks: [
       { title: "Spinning", body: "Controlled yarn production from raw cotton with quality metrics at every stage." },
@@ -36,13 +36,13 @@ export const pageContent = {
   quality: {
     badge: "Quality",
     title: ["QUALITY &", "COMPLIANCE"],
-    subtitle: "Lean manufacturing, laboratory testing, and continuous improvement — built into every line.",
+    subtitle: "Lean manufacturing, laboratory testing, and continuous improvement - built into every line.",
     heroImage: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1600&q=80",
     blocks: [
       { title: "Compliance", body: "ISO 9001:2015, ISO 14001:2015, and ISO 45001:2018 aligned operations." },
       { title: "Testing Lab", body: "Facilities from yarn through packing materials with structured audits." },
       { title: "Lean Production", body: "Traffic-light sewing line systems and efficiency-focused workflows." },
-      { title: "Continuous Improvement", body: "Analyze — Refine — Improve methodology across teams." }
+      { title: "Continuous Improvement", body: "Analyze, refine, and improve methodology across teams." }
     ]
   },
   careers: {
@@ -68,7 +68,7 @@ export const pageContent = {
     contactInfo: {
       email: "info@jasminetowels.com",
       phone: "+91 (enquiry line)",
-      address: "Madurai & Sivagangai, Tamil Nadu, India"
+      address: "Madurai and Sivagangai, Tamil Nadu, India"
     }
   }
 };

@@ -1,8 +1,9 @@
 import { Button, Form, Input, message } from "antd";
+import { Send } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import SplitHeading from "../components/venetian/SplitHeading";
-import { useVenetianReveal } from "../hooks/useVenetianReveal";
 import { useCart } from "../context/CartContext";
+import { useVenetianReveal } from "../hooks/useVenetianReveal";
 import api from "../services/api";
 
 export default function CheckoutPage() {
@@ -35,16 +36,20 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div ref={rootRef} className="pt-24 md:pt-28">
+    <div ref={rootRef} className="pt-32 md:pt-36">
       <section className="ven-container pb-12">
         <div className="ven-reveal">
-          <SplitHeading lines={["SHIPPING", "DETAILS"]} className="ven-heading-xl" />
+          <SplitHeading lines={["SHIPPING", "TRANSMISSION"]} className="ven-heading-xl" />
         </div>
-        <p className="ven-reveal ven-body mt-6">Complete your address to place the order.</p>
+        <p className="ven-reveal ven-body mt-6">Complete your destination details to send the order into the existing order API.</p>
       </section>
 
-      <section className="ven-container max-w-3xl pb-24">
-        <Form layout="vertical" onFinish={submit} className="ven-reveal grid gap-2 border border-ven-line bg-white p-8 md:grid-cols-2 md:gap-x-6 md:p-12">
+      <section className="ven-container grid gap-6 pb-24 lg:grid-cols-[1fr_0.48fr]">
+        <Form
+          layout="vertical"
+          onFinish={submit}
+          className="ven-reveal neo-panel grid gap-2 p-6 md:grid-cols-2 md:gap-x-6 md:p-8"
+        >
           <Form.Item name="fullName" label="Full Name" rules={[{ required: true }]} className="md:col-span-2">
             <Input size="large" />
           </Form.Item>
@@ -73,11 +78,25 @@ export default function CheckoutPage() {
             <Input size="large" />
           </Form.Item>
           <div className="md:col-span-2">
-            <Button htmlType="submit" className="ven-btn !mt-4 w-full md:w-auto">
+            <Button htmlType="submit" className="ven-btn !mt-4 w-full md:w-auto" icon={<Send size={16} />}>
               Place Order
             </Button>
           </div>
         </Form>
+
+        <aside className="ven-reveal neo-panel-dark h-fit p-6 md:p-8">
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#00d1c7]">Order packet</p>
+          <p className="mt-3 font-display text-5xl font-semibold">{items.length}</p>
+          <p className="mt-2 text-sm text-white/56">Line items waiting for checkout.</p>
+          <div className="mt-6 space-y-3">
+            {items.slice(0, 4).map((item, index) => (
+              <div key={`${item.product._id}-${index}`} className="rounded-[8px] border border-white/10 bg-white/[0.06] p-3">
+                <p className="font-semibold">{item.product.name}</p>
+                <p className="mt-1 text-xs text-white/54">Qty {item.quantity} / {item.color}</p>
+              </div>
+            ))}
+          </div>
+        </aside>
       </section>
     </div>
   );

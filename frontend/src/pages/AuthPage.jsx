@@ -1,8 +1,9 @@
 import { Button, Form, Input, Tabs, message } from "antd";
+import { KeyRound } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import SplitHeading from "../components/venetian/SplitHeading";
-import { useVenetianReveal } from "../hooks/useVenetianReveal";
 import { useAuth } from "../context/AuthContext";
+import { useVenetianReveal } from "../hooks/useVenetianReveal";
 import api from "../services/api";
 
 export default function AuthPage() {
@@ -11,15 +12,25 @@ export default function AuthPage() {
   const rootRef = useVenetianReveal();
 
   return (
-    <div ref={rootRef} className="pt-24 md:pt-28">
+    <div ref={rootRef} className="pt-32 md:pt-36">
       <section className="ven-container pb-12">
         <div className="ven-reveal">
-          <SplitHeading lines={["ACCOUNT", "ACCESS"]} className="ven-heading-xl" />
+          <SplitHeading lines={["SECURE", "ACCESS"]} className="ven-heading-xl" />
         </div>
       </section>
 
-      <section className="ven-container max-w-lg pb-24">
-        <div className="ven-reveal border border-ven-line bg-white p-8 md:p-10">
+      <section className="ven-container grid gap-6 pb-24 lg:grid-cols-[0.92fr_1.08fr] lg:items-start">
+        <div className="ven-reveal neo-panel-dark p-7 md:p-9">
+          <div className="grid h-12 w-12 place-items-center rounded-[8px] bg-[#00d1c7] text-[#101314]">
+            <KeyRound size={22} />
+          </div>
+          <h2 className="mt-8 font-display text-4xl font-semibold">One account, same backend.</h2>
+          <p className="mt-4 text-sm leading-relaxed text-white/58">
+            Login, registration, and admin bootstrap continue through the existing auth endpoints and token storage.
+          </p>
+        </div>
+
+        <div className="ven-reveal neo-panel p-6 md:p-8">
           <Tabs
             items={[
               {
