@@ -24,8 +24,17 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/upload", uploadRoutes);
 
 const port = process.env.PORT || 5000;
+
+console.log("Starting server...");
+console.log("PORT:", port);
+console.log("MONGO_URI:", process.env.MONGO_URI ? "set" : "NOT SET");
+console.log("CLIENT_URL:", process.env.CLIENT_URL || "*");
+
 connectDb().then(() => {
   app.listen(port, () => {
     console.log(`Server running on port ${port}`);
   });
+}).catch((err) => {
+  console.error("Failed to start server:", err.message);
+  process.exit(1);
 });
