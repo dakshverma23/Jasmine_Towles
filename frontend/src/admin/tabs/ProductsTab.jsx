@@ -5,6 +5,7 @@ import api from "../../services/api";
 
 export default function ProductsTab() {
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
@@ -12,12 +13,18 @@ export default function ProductsTab() {
 
   const load = async () => {
     setLoading(true);
-    const { data } = await api.get("/products");
-    setProducts(data);
+    const [prodRes, catRes] = await Promise.all([
+      api.get("/products"),
+      api.get("/categories"),
+    ]);
+    setProducts(prodRes.data);
+    setCategories(catRes.data);
     setLoading(false);
   };
 
   useEffect(() => { load(); }, []);
+
+  const categoryOptions = categories.map((c) => ({ value: c.name, label: c.name }));
 
   const openCreate = () => {
     setEditingProduct(null);
@@ -44,7 +51,7 @@ export default function ProductsTab() {
   const handleSubmit = async (values) => {
     const payload = {
       ...values,
-      slug: values.name.toLowerCase().replaceAll(" ", "-"),
+      slug: values.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
       colors: values.colors?.split(",").map((x) => x.trim()).filter(Boolean) || [],
       sizes: values.sizes?.split(",").map((x) => x.trim()).filter(Boolean) || [],
       badges: values.badges?.split(",").map((x) => x.trim()).filter(Boolean) || [],
@@ -78,6 +85,15 @@ export default function ProductsTab() {
     return false;
   };
 
+  const removeMedia = async (productId, index) => {
+    const product = products.find((p) => p._id === productId);
+    const newMedia = [...(product.media || [])];
+    newMedia.splice(index, 1);
+    await api.put(`/products/${productId}`, { media: newMedia });
+    message.success("Media removed");
+    load();
+  };
+
   const columns = [
     {
       title: "Media",
@@ -91,14 +107,19 @@ export default function ProductsTab() {
       ),
     },
     { title: "Name", dataIndex: "name", sorter: (a, b) => a.name.localeCompare(b.name) },
-    { title: "Category", dataIndex: "category", filters: [...new Set(products.map(p => p.category))].map(c => ({ text: c, value: c })), onFilter: (v, r) => r.category === v },
+    {
+      title: "Category",
+      dataIndex: "category",
+      filters: [...new Set(products.map(p => p.category))].map(c => ({ text: c, value: c })),
+      onFilter: (v, r) => r.category === v,
+    },
     { title: "Price", dataIndex: "price", render: (v) => `$${v}`, sorter: (a, b) => a.price - b.price },
     { title: "Min Qty", dataIndex: "minOrderQty" },
     { title: "Stock", render: (_, r) => <Tag color={r.inStock ? "green" : "red"}>{r.inStock ? "In Stock" : "Out"}</Tag> },
     { title: "Badges", render: (_, r) => r.badges?.map((b) => <Tag key={b} className="mb-1">{b}</Tag>) },
     {
       title: "Actions",
-      width: 200,
+      width: 220,
       render: (_, r) => (
         <Space>
           <Button icon={<EditOutlined />} size="small" onClick={() => openEdit(r)}>Edit</Button>
@@ -146,7 +167,12 @@ export default function ProductsTab() {
           </Form.Item>
           <div className="grid grid-cols-2 gap-4">
             <Form.Item name="category" label="Category" rules={[{ required: true }]}>
-              <Input placeholder="e.g. Bath" />
+              <Select
+                placeholder="Select a category"
+                options={categoryOptions}
+                showSearch
+                filterOption={(input, option) => option.label.toLowerCase().includes(input.toLowerCase())}
+              />
             </Form.Item>
             <Form.Item name="price" label="Price ($)" rules={[{ required: true }]}>
               <InputNumber className="!w-full" min={0} step={0.1} />
@@ -172,6 +198,31 @@ export default function ProductsTab() {
           <Form.Item name="badges" label="Badges">
             <Input placeholder="ISO Certified, Best Seller (comma separated)" />
           </Form.Item>
+
+          {editingProduct && editingProduct.media?.length > 0 && (
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Current Media</label>
+              <div className="flex flex-wrap gap-2">
+                {editingProduct.media.map((m, i) => (
+                  <div key={i} className="relative group">
+                    {m.mediaType === "video" ? (
+                      <video src={m.url} className="w-20 h-20 object-cover rounded" />
+                    ) : (
+                      <Image src={m.url} width={80} height={80} className="object-cover rounded" />
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => removeMedia(editingProduct._id, i)}
+                      className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="flex justify-end gap-3 mt-4">
             <Button onClick={() => setModalOpen(false)}>Cancel</Button>
             <Button type="primary" htmlType="submit">

@@ -1,5 +1,5 @@
 import { Card, Col, Row, Statistic, Table, Tag, Spin } from "antd";
-import { UserOutlined, ShoppingCartOutlined, AppstoreOutlined, ClockCircleOutlined } from "@ant-design/icons";
+import { UserOutlined, ShoppingCartOutlined, AppstoreOutlined, ClockCircleOutlined, TagsOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import api from "../../services/api";
 
@@ -58,6 +58,18 @@ export default function DashboardTab() {
         </Col>
         <Col xs={24} sm={12} lg={6}>
           <Card className="shadow-sm hover:shadow-md transition-shadow">
+            <Statistic
+              title="Categories"
+              value={stats.totalCategories}
+              prefix={<TagsOutlined className="text-cyan-500" />}
+            />
+          </Card>
+        </Col>
+      </Row>
+
+      <Row gutter={[16, 16]} className="mb-6">
+        <Col xs={24} sm={12} lg={6}>
+          <Card size="small" className="shadow-sm border-l-4 border-orange-400">
             <Statistic
               title="Pending Orders"
               value={stats.ordersByStatus.find((s) => s._id === "pending")?.count || 0}

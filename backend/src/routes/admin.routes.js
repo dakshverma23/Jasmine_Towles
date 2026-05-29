@@ -3,15 +3,17 @@ import { adminOnly, protect } from "../middleware/auth.js";
 import User from "../models/User.js";
 import Order from "../models/Order.js";
 import Product from "../models/Product.js";
+import Category from "../models/Category.js";
 
 const router = express.Router();
 
 // Dashboard stats
 router.get("/stats", protect, adminOnly, async (_req, res) => {
-  const [totalUsers, totalOrders, totalProducts, recentOrders] = await Promise.all([
+  const [totalUsers, totalOrders, totalProducts, totalCategories, recentOrders] = await Promise.all([
     User.countDocuments(),
     Order.countDocuments(),
     Product.countDocuments(),
+    Category.countDocuments(),
     Order.find().sort({ createdAt: -1 }).limit(5).populate("user", "name email")
   ]);
 
@@ -27,6 +29,7 @@ router.get("/stats", protect, adminOnly, async (_req, res) => {
     totalUsers,
     totalOrders,
     totalProducts,
+    totalCategories,
     recentOrders,
     ordersByStatus,
     productsByCategory
